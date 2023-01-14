@@ -38,8 +38,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     "django.contrib.gis",
+    'corsheaders',
     "location",
     "rest_framework",
+    'rest_framework_gis',
     "leaflet",
 ]
 
@@ -51,7 +53,12 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.security.SecurityMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+
 ]
+CORS_ORIGIN_ALLOW_ALL = True
 
 ROOT_URLCONF = 'config.urls'
 
@@ -86,6 +93,17 @@ DATABASES = {
         "HOST": "localhost",
         "PORT": "5432",
     }
+}
+
+LEAFLET_CONFIG = {
+    # "SPATIAL_EXTENT": (5.0, 44.0, 7.5, 46),
+    "DEFAULT_CENTER": (2.782759, 101.718453), #set your corordinate
+    "DEFAULT_ZOOM": 16,
+    "MIN_ZOOM": 3,
+    "MAX_ZOOM": 20,
+    "DEFAULT_PRECISION": 6,
+    "SCALE": "both",
+    "ATTRIBUTION_PREFIX": "powered by me",
 }
 
 
@@ -129,14 +147,3 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-LEAFLET_CONFIG = {
-    # "SPATIAL_EXTENT": (5.0, 44.0, 7.5, 46),
-    "DEFAULT_CENTER":(13.3888599,52.5170365), #set your corordinate
-    "DEFAULT_ZOOM": 16,
-    "MIN_ZOOM": 3,
-    "MAX_ZOOM": 20,
-    "DEFAULT_PRECISION": 6,
-    "SCALE": "both",
-    "ATTRIBUTION_PREFIX": "powered by me",
-}

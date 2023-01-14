@@ -1,0 +1,25 @@
+{
+  "name": "frontend",
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview --port 4173"
+  },
+  "dependencies": {
+    "leaflet": "^1.9.3",
+    "leaflet-simple-map-screenshoter": "^0.5.0",
+    "leaflet.gridlayer.googlemutant": "^0.13.5",
+    "pinia": "^2.0.16",
+    "vue": "^2.7.7",
+    "vue-router": "^3.5.4",
+    "vue2-leaflet": "^2.7.1",
+    "vue2-leaflet-googlemutant": "^2.0.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-legacy": "^2.0.0",
+    "@vitejs/plugin-vue2": "^1.1.2",
+    "terser": "^5.14.2",
+    "vite": "^3.0.2"
+  }
+}
