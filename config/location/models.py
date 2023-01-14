@@ -26,11 +26,22 @@ class Plantation(models.Model):
     Plantation_desc = models.TextField(blank=True,null=True)
     Listed_date =models.DateTimeField(default=now)
     
+class Plantation_GIS(models.Model): 
+    Plantation_GIS_id = models.AutoField(primary_key=True)
+    Plantation_id = models.ForeignKey(Plantation, on_delete=models.DO_NOTHING,null=True)
+    Raster = models.ImageField(upload_to='Raster/%Y_%m_%d/',null=True)
+    DSM = models.ImageField(upload_to='DSM/%Y_%m_%d/',null=True)
+    DTM = models.ImageField(upload_to='DTM/%Y_%m_%d/',null=True)
+    Flow = models.ImageField(upload_to='Flow/%Y_%m_%d/',null=True)
+    Vari = models.ImageField(upload_to='Vari/%Y_%m_%d/',null=True)
+    IMG_bound_1 = models.PointField(null=True)
+    IMG_bound_2  = models.PointField(null=True)
+    Upload_Date =models.DateField(auto_now_add=True)
 
 
 class Plot(models.Model): 
     Plot_id = models.CharField(max_length=100, primary_key=True)
-    Plot_name = models.CharField(max_length=100)
+    Plot_name = models.CharField(max_length=100,null=True)
     Plantation_id = models.ForeignKey(Plantation, on_delete=models.DO_NOTHING,null=True)
     Planted_area = models.FloatField(default=0.0,null=True)
     Area_size = models.FloatField(default=0.0,null=True)
