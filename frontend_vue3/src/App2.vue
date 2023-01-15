@@ -39,7 +39,7 @@ export default {
         // const imageBounds = [[5.416072150215122, 102.21765534421183], [5.4144485555928235, 102.21645355107528]]
         const tree_data = []
         onMounted(async () => {
-                const fetchtreetag = await axios.get('http://127.0.0.1:8000/api/v1/tree/')
+                const fetchtreetag = await axios.get('http://127.0.0.1:8000/api/v1/treehealth/')
                 const tree_data = fetchtreetag.data
 
                 const fetchplantation = await axios.get('http://127.0.0.1:8000/api/v1/plantationGIS/')
@@ -55,7 +55,7 @@ export default {
 
                 )
                 
-                console.log(polygon)
+                console.log(plantation_data[0])
                 
                 const imageBounds = [plantation_data[0].IMG_bound_1.coordinates.reverse(),plantation_data[0].IMG_bound_2.coordinates.reverse()]
                 
@@ -66,9 +66,23 @@ export default {
                     iconSize: [40, 40],
                 });
                 const redDot = L.icon({
-                    iconUrl: 'https://www.citypng.com/public/uploads/small/11641513638sanpg6vtthzma5pmyxbnbe0sfhpnqdawfg2pjpzl11hkj9qhwbj7g0ektsxgghfjeml4jehzbjkaujbydzfrhf4nb9agagomf0yz.png',
+                    iconUrl: 'https://upload.wikimedia.org/wikipedia/commons/0/0e/Basic_red_dot.png',
                     iconSize: [10, 10],
                 });
+
+                const greenDot = L.icon({
+                    iconUrl: 'https://www.pngkey.com/png/full/417-4174990_how-to-set-use-small-green-dot-icon.png',
+                    iconSize: [10, 10],
+                });
+                const yellowDot = L.icon({
+                    iconUrl: 'https://upload.wikimedia.org/wikipedia/commons/7/7c/GAudit_YellowDot.png',
+                    iconSize: [10, 10],
+                });
+                const blueDot = L.icon({
+                    iconUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/35/Location_dot_blue.svg/2048px-Location_dot_blue.svg.png',
+                    iconSize: [10, 10],
+                });
+
                 const deleteMarker = (marker) => {
                     marker.remove()
                 }
@@ -113,11 +127,29 @@ export default {
                 var tag = []
                 for (let i = 0; i < tree_data.length; i++) {
                     // console.log(tree_data[i].Gps.coordinates[1]);
-                    tag.push(L.marker([tree_data[i].Gps.coordinates[1], tree_data[i].Gps.coordinates[0]], { icon: redDot }).bindPopup(
+                    tag.push(L.marker([tree_data[i].Gps.coordinates[1], tree_data[i].Gps.coordinates[0]], { icon: blueDot }).bindPopup(
                         `<p>Latitude: ${tree_data[i].Gps.coordinates[1]},${tree_data[i].Gps.coordinates[0]}</p>`))
                 }
                 // console.log(tag);
                 tag.push(raster)
+
+
+                var health = []
+                for (let i = 0; i < tree_data.length; i++) {
+                    var icontype
+                    if(tree_data[i].Health_class=="Healthy"){
+                        icontype=greenDot
+                    }
+                    else if(tree_data[i].Health_class=="Moderate health"){
+                        icontype=yellowDot
+                    }
+                    else if(tree_data[i].Health_class=="Unhealthy"){
+                        icontype=redDot
+                    }
+                    health.push(L.marker([tree_data[i].Gps.coordinates[1], tree_data[i].Gps.coordinates[0]], { icon: icontype}).bindPopup(
+                        `<p>Status: ${tree_data[i].Health_class}</p>`))
+                }
+                health.push(raster)
 
                 var boundary = L.polygon(polygon, { color: 'green' })
                 var baseMaps = {
@@ -126,6 +158,7 @@ export default {
                 };
 
                 var treetag = L.layerGroup(tag);
+                var treehealth = L.layerGroup(health);
 
                 var overlayMaps = {
                     "Raster": raster,
@@ -133,7 +166,9 @@ export default {
                     "DSM": L.imageOverlay(`http://127.0.0.1:8000/${plantation_data[0].DSM}`, imageBounds),
                     "DTM": L.imageOverlay(`http://127.0.0.1:8000/${plantation_data[0].DTM}`, imageBounds),
                     "Flow": L.imageOverlay(`http://127.0.0.1:8000/${plantation_data[0].Flow}`, imageBounds),
-                    "TreeTag": treetag
+                    "TreeTag": treetag,
+                    "TreeHealth": treehealth
+
                 };
                 var layerControl = L.control.layers(baseMaps, overlayMaps).addTo(mapDiv);
     
